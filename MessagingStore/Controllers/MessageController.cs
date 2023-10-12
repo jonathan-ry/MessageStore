@@ -1,4 +1,5 @@
-﻿using MessagingStore.Models;
+﻿using MessagingStore.Interfaces;
+using MessagingStore.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MessagingStore.Controllers
@@ -7,10 +8,21 @@ namespace MessagingStore.Controllers
     [ApiController]
     public class MessageController : Controller
     {
-        [HttpPost("Send")]
-        public IActionResult Send(MessageDetail message)
+        private readonly IMessageService _messageService;
+
+        public MessageController(IMessageService messageService)
         {
-            if (message != null) return Ok(message);
+            _messageService = messageService;
+        }
+
+        [HttpPost("Send")]
+        public async Task<IActionResult> Send(MessageDetail message)
+        {
+            if (message != null)
+            {
+                await _messageService.Send(message);
+                return Ok(message);
+            }
 
             return BadRequest();
         }
