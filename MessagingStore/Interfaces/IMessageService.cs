@@ -4,7 +4,6 @@ namespace MessagingStore.Interfaces
 {
     public interface IMessageService
     {
-        Task Send(MessageDetail message);
-        Task Listen();
+        Task Send(ErrorResponse message);
     }
 }

@@ -9,48 +9,10 @@ namespace MessagingStore.Services
 {
     public class MessageService : IMessageService
     {
-        string serviceBusConnectionString = "Endpoint=sb://acn-messaging.servicebus.windows.net/;SharedAccessKeyName=API;SharedAccessKey=XUMjRvLWj7af/JuAY5UmxFzAwtHL1U/p1+ASbCqdAZ8=;EntityPath=messagequeue";
+        string serviceBusConnectionString = "Endpoint=sb://acn-messaging.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=dpABoy7n2yJZvRrMVO7rAofipPqrRAZyg+ASbLRvP20=";
         string queueName = "messagequeue";
-  
-        public async Task Listen()
-        {
-            var client = new ServiceBusClient(serviceBusConnectionString);
 
-            var processorOptions = new ServiceBusProcessorOptions
-            {
-                MaxConcurrentCalls = 1,
-                AutoCompleteMessages = false
-            };
-
-            await using ServiceBusProcessor processor = client.CreateProcessor(queueName, processorOptions);
-
-            processor.ProcessMessageAsync += MessageHandler;
-            processor.ProcessErrorAsync += ErrorHandler;
-
-
-            await processor.StartProcessingAsync();
-
-            await processor.CloseAsync();
-        }
-
-        // handle received messages
-        static async Task MessageHandler(ProcessMessageEventArgs args)
-        {
-            string body = args.Message.Body.ToString();
-            Console.WriteLine($"Received: {body}");
-
-            // complete the message. messages is deleted from the queue. 
-            await args.CompleteMessageAsync(args.Message);
-        }
-
-        // handle any errors when receiving messages
-        static Task ErrorHandler(ProcessErrorEventArgs args)
-        {
-            Console.WriteLine(args.Exception.ToString());
-            return Task.CompletedTask;
-        }
-
-        public async Task Send(MessageDetail message)
+        public async Task Send(ErrorResponse message)
         {
             await using var client = new ServiceBusClient(serviceBusConnectionString);
 
