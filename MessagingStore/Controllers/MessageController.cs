@@ -17,9 +17,9 @@ namespace MessagingStore.Controllers
         }
 
         [HttpPost("Send")]
-        public async Task<IActionResult> Send(int num)
+        public async Task<IActionResult> Send(ErrorRequest req)
         {
-            var response = GetErrorResponse(num);
+            var response = GetErrorResponse(req);
             try
             {
                 if (response != null)
@@ -51,9 +51,9 @@ namespace MessagingStore.Controllers
 
         }
 
-        protected ErrorResponse GetErrorResponse(int id) 
+        protected ErrorResponse GetErrorResponse(ErrorRequest req) 
         {
-            switch(id) 
+            switch(req.ErrorCode) 
             {
                 //Unauthorized Access Error
                 case 1:
@@ -67,8 +67,8 @@ namespace MessagingStore.Controllers
                         Location = "Security_Repository",
                         RequestInfo = new RequestInfo()
                         {
-                            User = "Juan",
-                            RequestId = "123456789"
+                            User = req.RequestInfo?.User,
+                            RequestId = req.RequestInfo?.RequestId
                         }
                     };
                 //Server Error
@@ -83,8 +83,8 @@ namespace MessagingStore.Controllers
                         Location = "Database_Repository",
                         RequestInfo = new RequestInfo()
                         {
-                            User = "Bob",
-                            RequestId = "123456789"
+                            User = req.RequestInfo?.User,
+                            RequestId = req.RequestInfo?.RequestId
                         }
                     };
                 //Validation  Error
@@ -99,8 +99,8 @@ namespace MessagingStore.Controllers
                         Location = "Login_Repository",
                         RequestInfo = new RequestInfo()
                         {
-                            User = "Tom",
-                            RequestId = "123456789"
+                            User = req.RequestInfo?.User,
+                            RequestId = req.RequestInfo?.RequestId
                         }
                     };
                 //System Failed
@@ -115,8 +115,8 @@ namespace MessagingStore.Controllers
                         Location = "System_Repository",
                         RequestInfo = new RequestInfo()
                         {
-                            User = "Admin",
-                            RequestId = "123456789"
+                            User = req.RequestInfo?.User,
+                            RequestId = req.RequestInfo?.RequestId
                         }
                     };
                 //Validation  Error
@@ -131,8 +131,8 @@ namespace MessagingStore.Controllers
                         Location = "Resource_Repository",
                         RequestInfo = new RequestInfo()
                         {
-                            User = "Admin",
-                            RequestId = "123456789"
+                            User = req.RequestInfo?.User,
+                            RequestId = req.RequestInfo?.RequestId
                         }
                     };
             }
